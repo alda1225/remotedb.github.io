@@ -849,7 +849,7 @@ section {
 # Hero Section
 --------------------------------------------------------------*/
 .hero-section {
-  background: linear-gradient(to right, rgba(39, 70, 133, 0.8) 0%, rgba(61, 179, 197, 0.8) 100%), url(../img/hero-bg.jpg);
+  background: linear-gradient(to right, rgb(0 5 14 / 80%) 0%, rgb(40 133 147 / 80%) 100%), url(../img/hero-bg.jpg);
   position: relative;
 }
 @media screen and (max-width: 992px) {
