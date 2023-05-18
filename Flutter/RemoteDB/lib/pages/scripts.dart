@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'connection.dart';
+import 'dart:async';
 
 class ScriptApp extends StatelessWidget {
-  Future<void> showInformationDialog(BuildContext context) async {
+  FutureOr<void> showInformationDialog(BuildContext context) async {
     return await showDialog(
       context: context,
       builder: (context) {
@@ -13,8 +13,8 @@ class ScriptApp extends StatelessWidget {
             height: 700,
             width: double.infinity,
             padding: const EdgeInsets.all(5),
-            child: Column(
-              children: const [
+            child: const Column(
+              children:  [
                 SizedBox(height: 10),
                 Text(
                   "Editar script",
@@ -110,7 +110,7 @@ class ScriptApp extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(children: const [
+                        const Row(children:  [
                           Icon(
                             Icons.badge_outlined,
                             color: Color(0xFF4C53A5),
@@ -125,7 +125,7 @@ class ScriptApp extends StatelessWidget {
                             ),
                           )
                         ]),
-                        Row(children: const [
+                        const Row(children:  [
                           Icon(
                             Icons.badge_outlined,
                             color: Color(0xFF4C53A5),
@@ -144,12 +144,12 @@ class ScriptApp extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
+                    Container(
+                    padding:const  EdgeInsets.symmetric(vertical: 10),
+                    child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children:  [
                         Icon(
                           Icons.play_arrow_outlined,
                           color: Colors.green,

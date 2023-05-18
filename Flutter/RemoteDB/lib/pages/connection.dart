@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sql_conn/sql_conn.dart';
 
 void main2() {
@@ -45,12 +48,37 @@ class _CompleteFormState extends State<CompleteForm> {
   final _userController = TextEditingController(text: 'sa');
   final _passController = TextEditingController(text: 'asql');
   final _scriptController = TextEditingController(text: "update person set estado='null' where name='asdd'");
+  String directorys="";
+
+@override
+  void initState() {
+    super.initState();
+  }
+  Future<String> get _localPath async {
+    /*final Directory tempDir = await getTemporaryDirectory();
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    final Directory? downloadsDir = await getDownloadsDirectory();*/
+    final directory = await getTemporaryDirectory();
+    return directory.path;
+  }
+
+  Future<File> get _localFile async {
+    final path = await _localPath;
+    return File('$path/counterFlutter.txt');
+  }
+
+  Future<File> writeCounter(int counter) async {
+    final file = await _localFile;
+    return file.writeAsString('$counter');
+  }
 
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     final double spaceHeight = 20;
+    
+  
 
     Future<void> connect(BuildContext ctx) async {
       debugPrint("Connecting...");
@@ -158,8 +186,8 @@ class _CompleteFormState extends State<CompleteForm> {
                 SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _hostController,
-                  decoration: const InputDecoration(
-                    labelText: "Host/Ip",
+                  decoration:  InputDecoration(
+                    labelText: directorys+ "Host/Ip",
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
@@ -278,8 +306,9 @@ class _CompleteFormState extends State<CompleteForm> {
                       minimumSize: const Size(100, 50),
                     ),
                     onPressed: () {
+                     //paths();
                       if (formKey.currentState!.validate()) {
-                        connect(context);
+                        //connect(context);
                       } else {
                         //connect(context);
                       }
