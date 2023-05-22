@@ -73,9 +73,10 @@ class _AppState extends State<AppScript> {
     Future<void> showInformationDialog(Script scripts) async {
       return await showDialog(
         context: context,
+        barrierColor: Colors.white,
         builder: (context) {
           return Dialog(
-            backgroundColor: Colors.black,
+            insetPadding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             child: Container(
               height: 665,
@@ -253,8 +254,8 @@ class _AppState extends State<AppScript> {
                                       await showInformationDialog(
                                         listScript[index],
                                       );
-
                                       developer.log('Salio del modal');
+                                      await listaScripts();
                                     },
                                     label: const Text(
                                       "Editar",
