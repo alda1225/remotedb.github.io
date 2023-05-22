@@ -1,46 +1,17 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sql_conn/sql_conn.dart';
 
-void main2() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp2());
-}
-
-class MyApp2 extends StatelessWidget {
-  const MyApp2({super.key});
+class FormConn extends StatefulWidget {
+  const FormConn({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter FormBuilder Demo',
-      debugShowCheckedModeBanner: false,
-      home: CompleteForm(),
-    );
+  State<FormConn> createState() {
+    return _AppState();
   }
 }
 
-/*class TestPage extends StatefulWidget {
-  const TestPage({Key? key}) : super(key: key);
-
-  @override
-  _TestPageState createState() => _TestPageState();
-}*/
-
-class CompleteForm extends StatefulWidget {
-  const CompleteForm({Key? key}) : super(key: key);
-
-  @override
-  State<CompleteForm> createState() {
-    return _CompleteFormState();
-  }
-}
-
-class _CompleteFormState extends State<CompleteForm> {
+class _AppState extends State<FormConn> {
   final formKey = GlobalKey<FormState>();
   final _hostController = TextEditingController(text: '192.168.50.80');
   final _puertoController = TextEditingController(text: '1433');
@@ -48,37 +19,17 @@ class _CompleteFormState extends State<CompleteForm> {
   final _userController = TextEditingController(text: 'sa');
   final _passController = TextEditingController(text: 'asql');
   final _scriptController = TextEditingController(text: "update person set estado='null' where name='asdd'");
-  String directorys="";
 
-@override
+  @override
   void initState() {
     super.initState();
-  }
-  Future<String> get _localPath async {
-    /*final Directory tempDir = await getTemporaryDirectory();
-    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-    final Directory? downloadsDir = await getDownloadsDirectory();*/
-    final directory = await getTemporaryDirectory();
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/counterFlutter.txt');
-  }
-
-  Future<File> writeCounter(int counter) async {
-    final file = await _localFile;
-    return file.writeAsString('$counter');
   }
 
   @override
   Widget build(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-    final double spaceHeight = 20;
-    
-  
+    //final double height = MediaQuery.of(context).size.height;
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    const double spaceHeight = 20;
 
     Future<void> connect(BuildContext ctx) async {
       debugPrint("Connecting...");
@@ -172,7 +123,7 @@ class _CompleteFormState extends State<CompleteForm> {
     }
 
     return Scaffold(
-      key: _scaffoldKey,
+      key: scaffoldKey,
       backgroundColor: Color(0xFFffffff),
       body: SingleChildScrollView(
         child: Container(
@@ -186,8 +137,8 @@ class _CompleteFormState extends State<CompleteForm> {
                 SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _hostController,
-                  decoration:  InputDecoration(
-                    labelText: directorys+ "Host/Ip",
+                  decoration: const InputDecoration(
+                    labelText: "Host/Ip",
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(),
                     enabledBorder: OutlineInputBorder(
@@ -196,7 +147,7 @@ class _CompleteFormState extends State<CompleteForm> {
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.deepPurple),
                     ),
-                    labelStyle: TextStyle(color: Colors.grey),
+                    labelStyle: TextStyle(fontFamily: 'Montserrat', color: Colors.grey),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -206,7 +157,7 @@ class _CompleteFormState extends State<CompleteForm> {
                     }
                   },
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _puertoController,
                   decoration: const InputDecoration(
@@ -229,7 +180,7 @@ class _CompleteFormState extends State<CompleteForm> {
                     }
                   },
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _databaseController,
                   decoration: const InputDecoration(
@@ -252,7 +203,7 @@ class _CompleteFormState extends State<CompleteForm> {
                     }
                   },
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _userController,
                   decoration: const InputDecoration(
@@ -275,7 +226,7 @@ class _CompleteFormState extends State<CompleteForm> {
                     }
                   },
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _passController,
                   decoration: const InputDecoration(
@@ -298,15 +249,14 @@ class _CompleteFormState extends State<CompleteForm> {
                     }
                   },
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 Padding(
-                  padding: EdgeInsets.only(top: 0),
+                  padding: const EdgeInsets.only(top: 0),
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(100, 50),
                     ),
                     onPressed: () {
-                     //paths();
                       if (formKey.currentState!.validate()) {
                         //connect(context);
                       } else {
@@ -314,12 +264,12 @@ class _CompleteFormState extends State<CompleteForm> {
                       }
                     },
                     child: const Text(
-                      "Probar conexión",
+                      "Probar",
                       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
                     ),
                   ),
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 TextFormField(
                   controller: _scriptController,
                   keyboardType: TextInputType.multiline,
@@ -345,7 +295,7 @@ class _CompleteFormState extends State<CompleteForm> {
                     }
                   },*/
                 ),
-                SizedBox(height: spaceHeight),
+                const SizedBox(height: spaceHeight),
                 Padding(
                   padding: EdgeInsets.only(top: 0),
                   child: OutlinedButton(
@@ -375,7 +325,7 @@ class _CompleteFormState extends State<CompleteForm> {
                       }
                     },
                     child: const Text(
-                      "Probar script",
+                      "Probar",
                       style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurple),
                     ),
                   ),

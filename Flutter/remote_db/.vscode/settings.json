@@ -1,0 +1,5 @@
+{
+    "editor.wordWrapColumn": 260,
+    "editor.minimap.maxColumn": 260,
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

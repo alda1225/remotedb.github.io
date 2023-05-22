@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:permisos/pages/home_page.dart';
+import 'view/connection/list_conn.dart';
+import 'view/script/list_script.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -15,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
       ),
       routes: {
-        "/": (context) => HomePage(),
+        "/": (context) => const AppScript(),
       },
 
       //home: MyHomePage(),
