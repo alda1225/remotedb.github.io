@@ -25,27 +25,28 @@ class HomeDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: InkWell(
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const AppConection(),
-                  ),
-                );
-              },
-              child: const Text(
+            title: const Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
                 'Conexiones',
                 style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4C53A5)),
               ),
             ),
             onTap: () {
-              // Update the state of the app.
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AppConection(),
+                ),
+              );
             },
           ),
           ListTile(
-            title: const Text(
-              'Scripts',
-              style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4C53A5)),
+            title: const Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                'Scripts',
+                style: TextStyle(fontFamily: 'Montserrat', fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF4C53A5)),
+              ),
             ),
             onTap: () {
               Navigator.of(context).pushReplacement(

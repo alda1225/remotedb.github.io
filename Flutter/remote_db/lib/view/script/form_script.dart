@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permisos/models/conection.dart';
 import 'package:permisos/models/scripts.dart';
 import 'package:permisos/utils/utils.dart';
+import 'package:permisos/view/connection/list_conn.dart';
 import 'package:sql_conn/sql_conn.dart';
 import 'dart:developer' as developer;
 
@@ -26,13 +27,11 @@ class _AppState extends State<FormScript> {
   final formKey = GlobalKey<FormState>();
 
   final _nombreController = TextEditingController();
-  final _hostController = TextEditingController();
-  final _puertoController = TextEditingController();
-  final _databaseController = TextEditingController();
-  final _userController = TextEditingController();
-  final _passController = TextEditingController();
+  final _descripcionController = TextEditingController();
   final _scriptController = TextEditingController();
-  String connSelect = "";
+
+  String? connSelect = "";
+  Connection connSeleccionado = Connection();
 
   @override
   void initState() {
@@ -43,20 +42,14 @@ class _AppState extends State<FormScript> {
   Widget build(BuildContext context) {
     if (widget.script != null) {
       connSelect = widget.script?.nombre ?? "";
+      connSeleccionado = widget.listConexiones.firstWhere((i) => i.nombre == widget.script?.idPadre);
+
       _nombreController.text = widget.script?.nombre ?? "";
-      _hostController.text = widget.script?.nombre ?? "";
-      _puertoController.text = widget.script?.nombre ?? "";
-      _databaseController.text = widget.script?.nombre ?? "";
-      _userController.text = widget.script?.nombre ?? "";
-      _passController.text = widget.script?.nombre ?? "";
-      _scriptController.text = widget.script?.nombre ?? "";
+      _descripcionController.text = widget.script?.descripcion ?? "";
+      _scriptController.text = widget.script?.scriptString ?? "";
     } else {
       _nombreController.text = "";
-      _hostController.text = "";
-      _puertoController.text = "";
-      _databaseController.text = "";
-      _userController.text = "";
-      _passController.text = "";
+      _descripcionController.text = "";
       _scriptController.text = "";
     }
 
@@ -64,10 +57,7 @@ class _AppState extends State<FormScript> {
       for (Connection conn in widget.listConexiones) {
         if (conn.nombre!.trim().toUpperCase() == _nombreController.text.trim().toUpperCase()) {
           ScaffoldMessenger.of(context).showSnackBar(
-            Widgets.snackBar(
-              "error",
-              'El nombre ya esta en uso',
-            ),
+            Widgets.snackBar("error", 'El nombre ya esta en uso '),
           );
           return false;
         }
@@ -75,37 +65,40 @@ class _AppState extends State<FormScript> {
       return true;
     }
 
-    Future<bool> saveScript() async {
+    Future<bool> save() async {
       try {
-        Connection model = Connection(
+        Script model = Script(
           nombre: _nombreController.text,
-          database: _databaseController.text,
-          hostIp: _hostController.text,
-          port: _puertoController.text,
-          user: _userController.text,
-          pass: _passController.text,
+          descripcion: _descripcionController.text,
+          scriptString: _scriptController.text,
+          idPadre: connSeleccionado.nombre,
         );
 
-        if (widget.script != null) {
+        int indexConexion = widget.listConexiones.indexOf(connSeleccionado);
+
+        if (widget.script == null) {
           developer.log('nuevo');
+
+          widget.listConexiones[indexConexion].script?.add(model);
+
           //Valida nombre
-          if (!validaNombre()) {
+          /*if (!validaNombre()) {
             return false;
-          }
-          widget.listConexiones.add(model);
+          }*/
+
+          //widget.listConexiones.add(model);
           utils.guardar(widget.listConexiones);
           return true;
         } else {
           developer.log('edit');
           //Valida nombre
-          if (_nombreController.text.trim().toUpperCase() != connSelect.trim().toUpperCase() && !validaNombre()) {
+          /*if (_nombreController.text.trim().toUpperCase() != connSelect.trim().toUpperCase() && !validaNombre()) {
             return false;
-          }
+          }*/
 
-          Connection connSeleccionado = widget.listConexiones.firstWhere((i) => i.nombre == connSelect);
           int indexConexion = widget.listConexiones.indexOf(connSeleccionado);
-
-          widget.listConexiones[indexConexion] = model;
+          int indexScript = widget.listConexiones[indexConexion].script!.indexOf(widget.script!);
+          widget.listConexiones[indexConexion].script?[indexScript] = model;
           utils.guardar(widget.listConexiones);
           return true;
         }
@@ -135,17 +128,30 @@ class _AppState extends State<FormScript> {
         child: Column(
           children: [
             const SizedBox(height: 5),
-            Text(
-              widget.script == null ? "Nuevo script" : "Editar script",
-              style: const TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4C53A5),
-              ),
-              textAlign: TextAlign.left,
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    widget.script == null ? "Nuevo script" : "Editar script",
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4C53A5),
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close_outlined),
+                ),
+              ],
             ),
-            const SizedBox(height: 5),
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
@@ -156,9 +162,9 @@ class _AppState extends State<FormScript> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: spaceHeight),
+                        const SizedBox(height: 5),
                         DropdownButtonFormField<Connection>(
-                          value: null,
+                          value: connSeleccionado,
                           onChanged: (newValue) {
                             // Aquí puedes manejar el evento onChanged
                           },
@@ -168,7 +174,14 @@ class _AppState extends State<FormScript> {
                               child: Text(connection.nombre ?? ""), // Aquí debes especificar la propiedad que deseas mostrar en el DropdownButtonFormField
                             );
                           }).toList(),
-                          decoration: Widgets.inputDecorations("Host/Ip"),
+                          decoration: Widgets.inputDecorations("Conexión"),
+                          validator: (value) {
+                            if (value == null) {
+                              return "Seleccione una conexión";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
                         const SizedBox(height: spaceHeight),
                         TextFormField(
@@ -184,59 +197,11 @@ class _AppState extends State<FormScript> {
                         ),
                         const SizedBox(height: spaceHeight),
                         TextFormField(
-                          controller: _hostController,
-                          decoration: Widgets.inputDecorations("Host/Ip"),
+                          controller: _descripcionController,
+                          decoration: Widgets.inputDecorations("Descripción"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Ingrese el Host/Ip";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        const SizedBox(height: spaceHeight),
-                        TextFormField(
-                          controller: _puertoController,
-                          decoration: Widgets.inputDecorations("Puerto"),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Ingrese el puerto";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        const SizedBox(height: spaceHeight),
-                        TextFormField(
-                          controller: _databaseController,
-                          decoration: Widgets.inputDecorations("Database"),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Ingrese una base de datos";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        const SizedBox(height: spaceHeight),
-                        TextFormField(
-                          controller: _userController,
-                          decoration: Widgets.inputDecorations("Usuario"),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Ingrese un usuario";
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        const SizedBox(height: spaceHeight),
-                        TextFormField(
-                          controller: _passController,
-                          decoration: Widgets.inputDecorations("Contraseña"),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Ingrese una contraseña";
+                              return "Ingrese una descripción";
                             } else {
                               return null;
                             }
@@ -248,7 +213,7 @@ class _AppState extends State<FormScript> {
                           keyboardType: TextInputType.multiline,
                           minLines: 3, //Normal textInputField will be displayed
                           maxLines: null, // when user presses enter it will adapt to it
-                          decoration: Widgets.inputDecorations("Host/Ip"),
+                          decoration: Widgets.inputDecorations("Script"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Ingrese un script";
@@ -270,10 +235,14 @@ class _AppState extends State<FormScript> {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.play_arrow_outlined),
                   style: Widgets.elevatedButtonPrimary(),
-                  onPressed: () {},
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      await utils.connectDatabase(context, connSeleccionado);
+                    }
+                  },
                   label: const Text(
                     "Probar",
-                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 12),
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -282,7 +251,7 @@ class _AppState extends State<FormScript> {
                   style: Widgets.elevatedButtonSuccess(),
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      bool guardadoCorrectamente = await saveScript();
+                      bool guardadoCorrectamente = await save();
                       if (guardadoCorrectamente) {
                         Navigator.pop(context);
                       }
@@ -309,7 +278,7 @@ class _AppState extends State<FormScript> {
                   },
                   label: const Text(
                     "Guardar",
-                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 12),
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -321,7 +290,7 @@ class _AppState extends State<FormScript> {
                   },
                   label: const Text(
                     "Cancelar",
-                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 12),
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                   ),
                 ),
               ],

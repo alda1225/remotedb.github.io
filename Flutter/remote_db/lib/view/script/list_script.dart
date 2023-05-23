@@ -70,16 +70,121 @@ class _AppState extends State<AppScript> {
     final double height = MediaQuery.of(context).size.height;
     final double widht = MediaQuery.of(context).size.width;
 
-    Future<void> showInformationDialog(Script scripts) async {
+    Future<void> showDeleteDialog(Script? script) async {
       return await showDialog(
         context: context,
-        barrierColor: Colors.white,
         builder: (context) {
           return Dialog(
+            alignment: Alignment.bottomCenter,
+            elevation: 0,
             insetPadding: EdgeInsets.all(0),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             child: Container(
-              height: 665,
+              height: 185,
+              width: widht,
+              padding: const EdgeInsets.all(5),
+              child: Column(
+                children: [
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: const Text(
+                          "Eliminar conexión",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4C53A5),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close_outlined),
+                      ),
+                    ],
+                  ),
+                  const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 5),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          "¿Esta seguro que desea eliminar este registro? Este proceso no se puede deshacer.",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(width: 5),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.delete_outline_rounded),
+                        style: Widgets.elevatedButtonPrimary(),
+                        onPressed: () async {
+                          Connection conn = listConexiones.firstWhere((i) => i.nombre == script?.idPadre);
+                          int indexConexion = listConexiones.indexOf(conn);
+                          listConexiones[indexConexion].script?.remove(script);
+
+                          utils.guardar(listConexiones);
+
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            Widgets.snackBar("success", 'Eliminado correctamente'),
+                          );
+                        },
+                        label: const Text(
+                          "Eliminar",
+                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.close_outlined),
+                        style: Widgets.elevatedButtonError(),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        label: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    Future<void> showInformationDialog(Script? scripts) async {
+      return await showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            alignment: Alignment.bottomCenter,
+            elevation: 0,
+            insetPadding: EdgeInsets.all(0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Container(
+              height: 475,
               width: widht,
               padding: const EdgeInsets.all(5),
               child: FormScript(script: scripts, listConexiones: listConexiones),
@@ -110,7 +215,7 @@ class _AppState extends State<AppScript> {
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.symmetric(
-                      vertical: 0,
+                      vertical: 10,
                       horizontal: 20,
                     ),
                     child: const Text(
@@ -130,7 +235,7 @@ class _AppState extends State<AppScript> {
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
                           height: 145,
-                          margin: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -185,7 +290,7 @@ class _AppState extends State<AppScript> {
                                           SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.6,
                                             child: Text(
-                                              listScript[index].descripcion ?? "",
+                                              listScript[index].idPadre ?? "",
                                               style: const TextStyle(
                                                 fontFamily: 'Montserrat',
                                                 fontSize: 15,
@@ -266,7 +371,13 @@ class _AppState extends State<AppScript> {
                                   ElevatedButton.icon(
                                     icon: const Icon(Icons.delete),
                                     style: Widgets.elevatedButtonError(),
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      await showDeleteDialog(
+                                        listScript[index],
+                                      );
+                                      developer.log('Salio del modal');
+                                      await listaScripts();
+                                    },
                                     label: const Text(
                                       "Eliminar",
                                       style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
@@ -286,6 +397,17 @@ class _AppState extends State<AppScript> {
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await showInformationDialog(
+            null,
+          );
+          developer.log('Salio del modal');
+          await listaScripts();
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // T
     );
   }
 }

@@ -91,7 +91,7 @@ class Widgets {
 
     return SnackBar(
       elevation: 10,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 10),
       behavior: SnackBarBehavior.floating,
       padding: const EdgeInsets.all(8.0),
       content: Text(
