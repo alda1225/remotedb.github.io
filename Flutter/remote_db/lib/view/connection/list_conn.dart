@@ -214,6 +214,9 @@ class _AppState extends State<AppConection> {
       drawer: const HomeDrawer(),
       body: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           const HomeAppBar(),
           Expanded(
             child: Container(

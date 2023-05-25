@@ -9,6 +9,7 @@ import '../widget/widget.dart';
 import 'form_script.dart';
 import 'dart:developer' as developer;
 import 'package:sql_conn/sql_conn.dart';
+import 'package:sizer/sizer.dart';
 
 class AppScript extends StatefulWidget {
   const AppScript({super.key});
@@ -199,6 +200,9 @@ class _AppState extends State<AppScript> {
       drawer: const HomeDrawer(),
       body: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           const HomeAppBar(),
           Expanded(
             child: Container(
@@ -332,7 +336,7 @@ class _AppState extends State<AppScript> {
                               Row(
                                 children: [
                                   ElevatedButton.icon(
-                                    icon: const Icon(Icons.play_arrow_outlined),
+                                    icon: Icon(Icons.play_arrow_outlined, size: 5.w),
                                     style: Widgets.elevatedButtonSuccess(),
                                     onPressed: () async {
                                       bool conexionDatabase = await utils.connectDatabase(context, listConexiones[0]);
@@ -346,14 +350,14 @@ class _AppState extends State<AppScript> {
                                         }
                                       }
                                     },
-                                    label: const Text(
+                                    label: Text(
                                       "Ejecutar",
-                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
+                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 3.8.w),
                                     ),
                                   ),
                                   const SizedBox(width: 10),
                                   ElevatedButton.icon(
-                                    icon: const Icon(Icons.edit),
+                                    icon: Icon(Icons.edit, size: 5.w),
                                     style: Widgets.elevatedButtonWarning(),
                                     onPressed: () async {
                                       await showInformationDialog(
@@ -362,14 +366,14 @@ class _AppState extends State<AppScript> {
                                       developer.log('Salio del modal');
                                       await listaScripts();
                                     },
-                                    label: const Text(
+                                    label: Text(
                                       "Editar",
-                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
+                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 3.8.w),
                                     ),
                                   ),
                                   const SizedBox(width: 10),
                                   ElevatedButton.icon(
-                                    icon: const Icon(Icons.delete),
+                                    icon: Icon(Icons.delete, size: 5.w),
                                     style: Widgets.elevatedButtonError(),
                                     onPressed: () async {
                                       await showDeleteDialog(
@@ -378,9 +382,9 @@ class _AppState extends State<AppScript> {
                                       developer.log('Salio del modal');
                                       await listaScripts();
                                     },
-                                    label: const Text(
+                                    label: Text(
                                       "Eliminar",
-                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
+                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 3.8.w),
                                     ),
                                   ),
                                 ],

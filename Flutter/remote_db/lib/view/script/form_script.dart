@@ -14,8 +14,7 @@ import '../widget/widget.dart';
 class FormScript extends StatefulWidget {
   final Script? script;
   final List<Connection> listConexiones;
-  const FormScript({Key? key, this.script, required this.listConexiones})
-      : super(key: key);
+  const FormScript({Key? key, this.script, required this.listConexiones}) : super(key: key);
 
   @override
   State<FormScript> createState() {
@@ -43,8 +42,7 @@ class _AppState extends State<FormScript> {
   Widget build(BuildContext context) {
     if (widget.script != null) {
       connSelect = widget.script?.nombre ?? "";
-      connSeleccionado = widget.listConexiones
-          .firstWhere((i) => i.nombre == widget.script?.idPadre);
+      connSeleccionado = widget.listConexiones.firstWhere((i) => i.nombre == widget.script?.idPadre);
 
       _nombreController.text = widget.script?.nombre ?? "";
       _descripcionController.text = widget.script?.descripcion ?? "";
@@ -57,8 +55,7 @@ class _AppState extends State<FormScript> {
 
     bool validaNombre() {
       for (Connection conn in widget.listConexiones) {
-        if (conn.nombre!.trim().toUpperCase() ==
-            _nombreController.text.trim().toUpperCase()) {
+        if (conn.nombre!.trim().toUpperCase() == _nombreController.text.trim().toUpperCase()) {
           ScaffoldMessenger.of(context).showSnackBar(
             Widgets.snackBar("error", 'El nombre ya esta en uso '),
           );
@@ -100,8 +97,7 @@ class _AppState extends State<FormScript> {
           }*/
 
           int indexConexion = widget.listConexiones.indexOf(connSeleccionado!);
-          int indexScript = widget.listConexiones[indexConexion].script!
-              .indexOf(widget.script!);
+          int indexScript = widget.listConexiones[indexConexion].script!.indexOf(widget.script!);
           widget.listConexiones[indexConexion].script?[indexScript] = model;
           utils.guardar(widget.listConexiones);
           return true;
@@ -172,13 +168,10 @@ class _AppState extends State<FormScript> {
                           onChanged: (newValue) {
                             connSeleccionado = newValue;
                           },
-                          items: widget.listConexiones
-                              .map<DropdownMenuItem<Connection>>(
-                                  (Connection connection) {
+                          items: widget.listConexiones.map<DropdownMenuItem<Connection>>((Connection connection) {
                             return DropdownMenuItem<Connection>(
                               value: connection,
-                              child: Text(connection.nombre ??
-                                  ""), // Aquí debes especificar la propiedad que deseas mostrar en el DropdownButtonFormField
+                              child: Text(connection.nombre ?? ""), // Aquí debes especificar la propiedad que deseas mostrar en el DropdownButtonFormField
                             );
                           }).toList(),
                           decoration: Widgets.inputDecorations("Conexión"),
@@ -219,8 +212,7 @@ class _AppState extends State<FormScript> {
                           controller: _scriptController,
                           keyboardType: TextInputType.multiline,
                           minLines: 3, //Normal textInputField will be displayed
-                          maxLines:
-                              null, // when user presses enter it will adapt to it
+                          maxLines: null, // when user presses enter it will adapt to it
                           decoration: Widgets.inputDecorations("Script"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {

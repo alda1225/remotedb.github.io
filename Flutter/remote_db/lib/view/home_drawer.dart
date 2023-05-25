@@ -18,9 +18,20 @@ class HomeDrawer extends StatelessWidget {
             ),
             child: Container(
               padding: const EdgeInsets.only(top: 25),
-              child: const Text(
-                'RemoteDB',
-                style: TextStyle(fontFamily: 'Montserrat', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'RemoteDB',
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'V 1.1',
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ],
               ),
             ),
           ),

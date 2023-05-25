@@ -65,10 +65,7 @@ class _AppState extends State<FormConn> {
       for (Connection conn in widget.listConexiones) {
         if (conn.nombre!.trim().toUpperCase() == _nombreController.text.trim().toUpperCase()) {
           ScaffoldMessenger.of(context).showSnackBar(
-            Widgets.snackBar(
-              "error",
-              'El nombre ya esta en uso',
-            ),
+            Widgets.snackBar("error", 'El nombre ya esta en uso'),
           );
           return false;
         }
@@ -85,6 +82,7 @@ class _AppState extends State<FormConn> {
           port: _puertoController.text,
           user: _userController.text,
           pass: _passController.text,
+          script: [],
         );
 
         if (widget.conn == null) {
@@ -93,6 +91,7 @@ class _AppState extends State<FormConn> {
           if (!validaNombre()) {
             return false;
           }
+
           widget.listConexiones.add(model);
           utils.guardar(widget.listConexiones);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -108,8 +107,18 @@ class _AppState extends State<FormConn> {
 
           int indexConexion = widget.listConexiones.indexOf(connSeleccionado);
 
+          //Actializa scripts
+          List<Script> listScriptActualizada = [];
+          for (Script script in widget.listConexiones[indexConexion].script ?? []) {
+            script.idPadre = _nombreController.text;
+            listScriptActualizada.add(script);
+          }
+
+          model.script = listScriptActualizada;
           widget.listConexiones[indexConexion] = model;
+
           utils.guardar(widget.listConexiones);
+
           ScaffoldMessenger.of(context).showSnackBar(
             Widgets.snackBar("success", 'Modificado correctamente'),
           );
@@ -118,10 +127,7 @@ class _AppState extends State<FormConn> {
       } catch (e) {
         developer.log('Exception saveScript() $e');
         ScaffoldMessenger.of(context).showSnackBar(
-          Widgets.snackBar(
-            "error",
-            'Exception loadConnection() $e',
-          ),
+          Widgets.snackBar("error", 'Exception loadConnection() $e'),
         );
         return false;
       }
