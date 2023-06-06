@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Widgets {
   static inputDecorations(String titulo) {
@@ -42,9 +43,33 @@ class Widgets {
     return ElevatedButton.styleFrom(
       elevation: 0,
       padding: const EdgeInsets.all(5),
-      foregroundColor: const Color(0xFF00C853),
-      side: BorderSide(color: const Color(0xFF00C853).withOpacity(0.08)),
-      backgroundColor: const Color(0xFF00C853).withOpacity(0.08),
+      foregroundColor: const Color(0xFF5DB75D),
+      side: BorderSide(color: const Color(0xFF5DB75D).withOpacity(0.08)),
+      backgroundColor: const Color(0xFF5DB75D).withOpacity(0.08),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      shadowColor: Colors.white,
+    );
+  }
+
+  static buttonPrimary2() {
+    return ElevatedButton.styleFrom(
+      elevation: 0,
+      padding: const EdgeInsets.all(5),
+      foregroundColor: const Color(0xFF4C53A5),
+      side: const BorderSide(color: Colors.transparent),
+      backgroundColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      shadowColor: Colors.white,
+    );
+  }
+
+  static buttonPrimary() {
+    return ElevatedButton.styleFrom(
+      elevation: 0,
+      padding: const EdgeInsets.all(5),
+      foregroundColor: Colors.white,
+      side: const BorderSide(color: Color(0xFF4C53A5)),
+      backgroundColor: const Color(0xFF4C53A5),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       shadowColor: Colors.white,
     );
@@ -98,7 +123,7 @@ class Widgets {
         text,
         style: const TextStyle(
           fontFamily: 'Montserrat',
-          fontSize: 18,
+          fontSize: 15,
           color: Colors.white,
           fontWeight: FontWeight.w400,
           height: 1.5,

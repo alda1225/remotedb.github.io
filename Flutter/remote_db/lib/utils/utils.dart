@@ -25,7 +25,7 @@ class Utils {
       conexion.user = "sa";
       conexion.pass = "asql";
 
-      // Añade un registro de ejemplo a la lista de conexiones
+      // Añade un registro de ejemplo a la lista de scripts
       Script script = Script();
       script.idPadre = "Conexión Example";
       script.nombre = "Script update rol";
@@ -161,7 +161,7 @@ class Utils {
     }
   }
 
-  Future<File?> get _localFileTmp async {
+  Future<File?> localFileTmp() async {
     try {
       final directory = await getTemporaryDirectory();
       final path = directory.path;
@@ -174,7 +174,7 @@ class Utils {
 
   Future<Future<File>?> writeJson(String json) async {
     try {
-      final file = await _localFileTmp;
+      final file = await localFileTmp();
       return file?.writeAsString(json);
     } catch (e) {
       developer.log('Exception writeJson() $e');
@@ -184,7 +184,7 @@ class Utils {
 
   Future<String?> readJson() async {
     try {
-      final file = await _localFileTmp;
+      final file = await localFileTmp();
       bool? existFile = await file?.exists();
       if (existFile != null && existFile) {
         return file?.readAsString();

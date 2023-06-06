@@ -1,20 +1,17 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permisos/models/conection.dart';
 import 'package:permisos/models/scripts.dart';
 import 'package:permisos/utils/utils.dart';
-import 'package:permisos/view/connection/list_conn.dart';
-import 'package:sql_conn/sql_conn.dart';
 import 'dart:developer' as developer;
 
 import '../widget/widget.dart';
 
 class FormScript extends StatefulWidget {
+  final String? idConn;
   final Script? script;
   final List<Connection> listConexiones;
-  const FormScript({Key? key, this.script, required this.listConexiones}) : super(key: key);
+  const FormScript({Key? key, this.script, required this.listConexiones, required this.idConn}) : super(key: key);
 
   @override
   State<FormScript> createState() {
@@ -30,7 +27,6 @@ class _AppState extends State<FormScript> {
   final _descripcionController = TextEditingController();
   final _scriptController = TextEditingController();
 
-  String? connSelect = "";
   Connection? connSeleccionado;
 
   @override
@@ -40,10 +36,9 @@ class _AppState extends State<FormScript> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.script != null) {
-      connSelect = widget.script?.nombre ?? "";
-      connSeleccionado = widget.listConexiones.firstWhere((i) => i.nombre == widget.script?.idPadre);
+    connSeleccionado = widget.listConexiones.firstWhere((i) => i.nombre == widget.idConn);
 
+    if (widget.script != null) {
       _nombreController.text = widget.script?.nombre ?? "";
       _descripcionController.text = widget.script?.descripcion ?? "";
       _scriptController.text = widget.script?.scriptString ?? "";
@@ -163,7 +158,7 @@ class _AppState extends State<FormScript> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 5),
-                        DropdownButtonFormField<Connection>(
+                        /*DropdownButtonFormField<Connection>(
                           value: connSeleccionado,
                           onChanged: (newValue) {
                             connSeleccionado = newValue;
@@ -182,11 +177,25 @@ class _AppState extends State<FormScript> {
                               return null;
                             }
                           },
+                        ),*/
+                        //const SizedBox(height: spaceHeight),
+                        TextFormField(
+                          enabled: false,
+                          //controller: _nombreController,
+                          initialValue: connSeleccionado!.nombre,
+                          decoration: Widgets.inputDecorations("Connexión"),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Ingrese el nombre";
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
-                        const SizedBox(height: spaceHeight),
+                        const SizedBox(height: 10),
                         TextFormField(
                           controller: _nombreController,
-                          decoration: Widgets.inputDecorations("Nombre"),
+                          decoration: Widgets.inputDecorations("Nombre script"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Ingrese el nombre";
@@ -198,7 +207,7 @@ class _AppState extends State<FormScript> {
                         const SizedBox(height: spaceHeight),
                         TextFormField(
                           controller: _descripcionController,
-                          decoration: Widgets.inputDecorations("Descripción"),
+                          decoration: Widgets.inputDecorations("Descripción script"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Ingrese una descripción";
@@ -247,6 +256,18 @@ class _AppState extends State<FormScript> {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton.icon(
+                  icon: const Icon(Icons.close_outlined),
+                  style: Widgets.elevatedButtonError(),
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  label: const Text(
+                    "Cancelar",
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton.icon(
                   icon: const Icon(Icons.save_outlined),
                   style: Widgets.elevatedButtonSuccess(),
                   onPressed: () async {
@@ -278,18 +299,6 @@ class _AppState extends State<FormScript> {
                   },
                   label: const Text(
                     "Guardar",
-                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.close_outlined),
-                  style: Widgets.elevatedButtonError(),
-                  onPressed: () async {
-                    Navigator.pop(context);
-                  },
-                  label: const Text(
-                    "Cancelar",
                     style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                   ),
                 ),

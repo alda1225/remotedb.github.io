@@ -18,17 +18,17 @@ class HomeDrawer extends StatelessWidget {
             ),
             child: Container(
               padding: const EdgeInsets.only(top: 25),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
+                children: const [
                   Text(
                     'RemoteDB',
                     style: TextStyle(fontFamily: 'Montserrat', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   SizedBox(height: 5),
                   Text(
-                    'V 1.1',
+                    'V 1.5',
                     style: TextStyle(fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],
@@ -51,7 +51,8 @@ class HomeDrawer extends StatelessWidget {
               );
             },
           ),
-          ListTile(
+
+          /*ListTile(
             title: const Padding(
               padding: EdgeInsets.all(10),
               child: Text(
@@ -66,7 +67,7 @@ class HomeDrawer extends StatelessWidget {
                 ),
               );
             },
-          ),
+          ),*/
         ],
       ),
     );

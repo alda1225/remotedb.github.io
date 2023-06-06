@@ -5,9 +5,9 @@ import 'package:permisos/view/home_app_bar.dart';
 import '../../models/conection.dart';
 import '../../utils/utils.dart';
 import '../home_drawer.dart';
+import '../script/list_script.dart';
 import '../widget/widget.dart';
 import 'dart:developer' as developer;
-import 'package:sql_conn/sql_conn.dart';
 
 import 'form_conn.dart';
 
@@ -68,6 +68,7 @@ class _AppState extends State<AppConection> {
 
   @override
   Widget build(BuildContext context) {
+    final _fileNameController = TextEditingController(text: '/sdcard/test.txt');
     final double height = MediaQuery.of(context).size.height;
     final double widht = MediaQuery.of(context).size.width;
 
@@ -111,10 +112,10 @@ class _AppState extends State<AppConection> {
                       ),
                     ],
                   ),
-                  const Column(
+                  Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       SizedBox(height: 5),
                       Padding(
                         padding: EdgeInsets.all(10),
@@ -133,6 +134,18 @@ class _AppState extends State<AppConection> {
                   Row(
                     children: [
                       const SizedBox(width: 5),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.close_outlined),
+                        style: Widgets.elevatedButtonError(),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        label: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.delete_outline_rounded),
                         style: Widgets.elevatedButtonPrimary(),
@@ -164,18 +177,6 @@ class _AppState extends State<AppConection> {
                         },
                         label: const Text(
                           "Eliminar",
-                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.close_outlined),
-                        style: Widgets.elevatedButtonError(),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                        label: const Text(
-                          "Cancelar",
                           style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                         ),
                       ),
@@ -251,34 +252,64 @@ class _AppState extends State<AppConection> {
                       padding: const EdgeInsets.all(5),
                       itemCount: listConexiones.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          height: 120,
-                          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 55,
-                                    width: 55,
-                                    margin: const EdgeInsets.only(right: 15),
-                                    child: Image.asset("images/sql-icon.jpg"),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 5),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => AppScript(conn: listConexiones[index]),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 120,
+                            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 55,
+                                      width: 55,
+                                      margin: const EdgeInsets.only(right: 15),
+                                      child: Image.asset("images/sql-icon.jpg"),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 5),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.account_box_outlined,
+                                                color: Color(0xFF4C53A5),
+                                                size: 18,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              SizedBox(
+                                                width: MediaQuery.of(context).size.width * 0.4,
+                                                child: Text(
+                                                  "${listConexiones[index].nombre}",
+                                                  style: const TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black87,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          Row(children: [
                                             const Icon(
-                                              Icons.account_box_outlined,
+                                              Icons.text_snippet_outlined,
                                               color: Color(0xFF4C53A5),
                                               size: 18,
                                             ),
@@ -286,125 +317,104 @@ class _AppState extends State<AppConection> {
                                             SizedBox(
                                               width: MediaQuery.of(context).size.width * 0.4,
                                               child: Text(
-                                                "${listConexiones[index].nombre}",
+                                                listConexiones[index].hostIp ?? "",
                                                 style: const TextStyle(
                                                   fontFamily: 'Montserrat',
                                                   fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.normal,
                                                   color: Colors.black87,
                                                   overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             )
-                                          ],
-                                        ),
-                                        Row(children: [
-                                          const Icon(
-                                            Icons.text_snippet_outlined,
-                                            color: Color(0xFF4C53A5),
-                                            size: 18,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.4,
-                                            child: Text(
-                                              listConexiones[index].hostIp ?? "",
-                                              style: const TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black87,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
+                                          ]),
+                                          Row(children: [
+                                            const Icon(
+                                              Icons.person,
+                                              color: Color(0xFF4C53A5),
+                                              size: 18,
                                             ),
-                                          )
-                                        ]),
-                                        Row(children: [
-                                          const Icon(
-                                            Icons.person,
-                                            color: Color(0xFF4C53A5),
-                                            size: 18,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.4,
-                                            child: Text(
-                                              listConexiones[index].user ?? "",
-                                              style: const TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black87,
-                                                overflow: TextOverflow.ellipsis,
+                                            const SizedBox(width: 10),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.4,
+                                              child: Text(
+                                                listConexiones[index].user ?? "",
+                                                style: const TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black87,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
+                                            )
+                                          ]),
+                                          Row(children: [
+                                            const Icon(
+                                              Icons.storage_outlined,
+                                              color: Color(0xFF4C53A5),
+                                              size: 18,
                                             ),
-                                          )
-                                        ]),
-                                        Row(children: [
-                                          const Icon(
-                                            Icons.storage_outlined,
-                                            color: Color(0xFF4C53A5),
-                                            size: 18,
-                                          ),
-                                          const SizedBox(width: 10),
-                                          SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.4,
-                                            child: Text(
-                                              listConexiones[index].database ?? "",
-                                              style: const TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black87,
-                                                overflow: TextOverflow.ellipsis,
+                                            const SizedBox(width: 10),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.4,
+                                              child: Text(
+                                                listConexiones[index].database ?? "",
+                                                style: const TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black87,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ]),
-                                      ],
+                                            )
+                                          ]),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit_note_rounded, size: 28),
-                                          onPressed: () async {
-                                            await showInformationDialog(
-                                              listConexiones[index],
-                                            );
-                                            developer.log('Salio del modal');
-                                            await listaScripts();
-                                          },
-                                          color: Colors.orange,
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete_outline_rounded, size: 25),
-                                          onPressed: () async {
-                                            await showDeleteDialog(
-                                              listConexiones[index],
-                                            );
-                                            developer.log('Salio del modal');
-                                            await listaScripts();
-                                          },
-                                          color: Colors.red,
-                                        ),
-                                      ],
+                                    const Spacer(),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.edit_note_rounded, size: 28),
+                                            onPressed: () async {
+                                              await showInformationDialog(
+                                                listConexiones[index],
+                                              );
+                                              developer.log('Salio del modal');
+                                              await listaScripts();
+                                            },
+                                            color: Colors.orange,
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline_rounded, size: 25),
+                                            onPressed: () async {
+                                              await showDeleteDialog(
+                                                listConexiones[index],
+                                              );
+                                              developer.log('Salio del modal');
+                                              await listaScripts();
+                                            },
+                                            color: Colors.red,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
                     ),
                   ),
-                  SizedBox(height: 45)
+                  const SizedBox(height: 45)
                 ],
               ),
             ),
@@ -419,7 +429,7 @@ class _AppState extends State<AppConection> {
           developer.log('Salio del modal');
           await listaScripts();
         },
-        tooltip: 'Increment',
+        tooltip: 'Add',
         child: const Icon(Icons.add),
       ), // Th
     );

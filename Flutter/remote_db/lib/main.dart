@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permisos/view/home_page.dart';
 import 'view/connection/list_conn.dart';
 import 'view/script/list_script.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           ),
           //home: HomeScreen() ,
           routes: {
-            "/": (context) => const AppScript(),
+            "/": (context) => AppHomePage(),
           },
         );
       },

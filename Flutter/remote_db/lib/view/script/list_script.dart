@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:permisos/models/scripts.dart';
-import 'package:permisos/view/home_app_bar.dart';
 
 import '../../models/conection.dart';
 import '../../utils/utils.dart';
-import '../home_drawer.dart';
 import '../widget/widget.dart';
 import 'form_script.dart';
 import 'dart:developer' as developer;
-import 'package:sql_conn/sql_conn.dart';
 import 'package:sizer/sizer.dart';
 
 class AppScript extends StatefulWidget {
-  const AppScript({super.key});
+  final Connection? conn;
+  const AppScript({super.key, required this.conn});
 
   @override
   State<AppScript> createState() => _AppState();
@@ -26,6 +24,7 @@ class _AppState extends State<AppScript> {
   @override
   void initState() {
     super.initState();
+
     try {
       init();
     } catch (e) {
@@ -43,7 +42,7 @@ class _AppState extends State<AppScript> {
 
       await listaScripts();
 
-      developer.log("INICIALIZA: listConexiones:${listConexiones.length}");
+      developer.log("INICIALIZA: listConexiones: ${listConexiones.length}");
     } catch (e) {
       developer.log('Exception init() $e');
     }
@@ -56,7 +55,9 @@ class _AppState extends State<AppScript> {
       listScript.clear();
       for (Connection item in listConexiones) {
         for (Script script in item.script ?? []) {
-          listScript.add(script);
+          if (script.idPadre == widget.conn!.nombre) {
+            listScript.add(script);
+          }
         }
       }
 
@@ -111,10 +112,10 @@ class _AppState extends State<AppScript> {
                       ),
                     ],
                   ),
-                  const Column(
+                  Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    children: const [
                       SizedBox(height: 5),
                       Padding(
                         padding: EdgeInsets.all(10),
@@ -134,6 +135,18 @@ class _AppState extends State<AppScript> {
                     children: [
                       const SizedBox(width: 5),
                       ElevatedButton.icon(
+                        icon: const Icon(Icons.close_outlined),
+                        style: Widgets.elevatedButtonError(),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        label: const Text(
+                          "Cancelar",
+                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
                         icon: const Icon(Icons.delete_outline_rounded),
                         style: Widgets.elevatedButtonPrimary(),
                         onPressed: () async {
@@ -150,18 +163,6 @@ class _AppState extends State<AppScript> {
                         },
                         label: const Text(
                           "Eliminar",
-                          style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.close_outlined),
-                        style: Widgets.elevatedButtonError(),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                        label: const Text(
-                          "Cancelar",
                           style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                         ),
                       ),
@@ -188,7 +189,7 @@ class _AppState extends State<AppScript> {
               height: 475,
               width: widht,
               padding: const EdgeInsets.all(5),
-              child: FormScript(script: scripts, listConexiones: listConexiones),
+              child: FormScript(script: scripts, listConexiones: listConexiones, idConn: widget.conn!.nombre),
             ),
           );
         },
@@ -197,13 +198,46 @@ class _AppState extends State<AppScript> {
 
     //final double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      drawer: const HomeDrawer(),
+      //drawer: const HomeDrawer(),
       body: Column(
         children: [
           const SizedBox(
             height: 20,
           ),
-          const HomeAppBar(),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.only(left: 5, top: 30, right: 0, bottom: 10),
+            child: Row(
+              children: [
+                const SizedBox(width: 5),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 26,
+                    color: Color(0xFF4C53A5),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(
+                    left: 10,
+                  ),
+                  child: Text(
+                    "RemoteDB",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF4C53A5),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+              ],
+            ),
+          ),
           Expanded(
             child: Container(
               padding: const EdgeInsets.only(top: 10),
@@ -215,20 +249,23 @@ class _AppState extends State<AppScript> {
                 ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                    width: MediaQuery.of(context).size.width * 0.89,
                     alignment: Alignment.centerLeft,
                     margin: const EdgeInsets.symmetric(
                       vertical: 10,
                       horizontal: 20,
                     ),
-                    child: const Text(
-                      "Listado scripts",
-                      style: TextStyle(
+                    child: Text(
+                      "Scripts - ${widget.conn?.nombre}",
+                      style: const TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF4C53A5),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
@@ -238,7 +275,7 @@ class _AppState extends State<AppScript> {
                       itemCount: listScript.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
-                          height: 145,
+                          height: 165,
                           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -246,12 +283,14 @@ class _AppState extends State<AppScript> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
                                   Container(
-                                    height: 55,
-                                    width: 55,
+                                    height: 50,
+                                    width: 50,
                                     margin: const EdgeInsets.only(right: 15),
                                     child: Image.asset("images/script.png"),
                                   ),
@@ -259,7 +298,7 @@ class _AppState extends State<AppScript> {
                                     padding: const EdgeInsets.symmetric(vertical: 10),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -270,7 +309,7 @@ class _AppState extends State<AppScript> {
                                             ),
                                             const SizedBox(width: 10),
                                             SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.6,
+                                              width: MediaQuery.of(context).size.width * 0.5,
                                               child: Text(
                                                 "${listScript[index].nombre}",
                                                 style: const TextStyle(
@@ -286,15 +325,15 @@ class _AppState extends State<AppScript> {
                                         ),
                                         Row(children: [
                                           const Icon(
-                                            Icons.storage_outlined,
+                                            Icons.insert_drive_file_outlined,
                                             color: Color(0xFF4C53A5),
                                             size: 18,
                                           ),
                                           const SizedBox(width: 10),
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.6,
+                                            width: MediaQuery.of(context).size.width * 0.5,
                                             child: Text(
-                                              listScript[index].idPadre ?? "",
+                                              listScript[index].descripcion ?? "",
                                               style: const TextStyle(
                                                 fontFamily: 'Montserrat',
                                                 fontSize: 15,
@@ -307,15 +346,15 @@ class _AppState extends State<AppScript> {
                                         ]),
                                         Row(children: [
                                           const Icon(
-                                            Icons.insert_drive_file_outlined,
+                                            Icons.cloud_queue,
                                             color: Color(0xFF4C53A5),
                                             size: 18,
                                           ),
                                           const SizedBox(width: 10),
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.6,
+                                            width: MediaQuery.of(context).size.width * 0.5,
                                             child: Text(
-                                              listScript[index].scriptString ?? "",
+                                              listScript[index].idPadre ?? "",
                                               style: const TextStyle(
                                                 fontFamily: 'Montserrat',
                                                 fontSize: 15,
@@ -330,6 +369,37 @@ class _AppState extends State<AppScript> {
                                     ),
                                   ),
                                   const Spacer(),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit_note_rounded, size: 28),
+                                          onPressed: () async {
+                                            await showInformationDialog(
+                                              listScript[index],
+                                            );
+                                            developer.log('Salio del modal');
+                                            await listaScripts();
+                                          },
+                                          color: Colors.orange,
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete_outline_rounded, size: 25),
+                                          onPressed: () async {
+                                            await showDeleteDialog(
+                                              listScript[index],
+                                            );
+                                            developer.log('Salio del modal');
+                                            await listaScripts();
+                                          },
+                                          color: Colors.red,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                               const Spacer(),
@@ -356,37 +426,6 @@ class _AppState extends State<AppScript> {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  ElevatedButton.icon(
-                                    icon: Icon(Icons.edit, size: 5.w),
-                                    style: Widgets.elevatedButtonWarning(),
-                                    onPressed: () async {
-                                      await showInformationDialog(
-                                        listScript[index],
-                                      );
-                                      developer.log('Salio del modal');
-                                      await listaScripts();
-                                    },
-                                    label: Text(
-                                      "Editar",
-                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 3.8.w),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton.icon(
-                                    icon: Icon(Icons.delete, size: 5.w),
-                                    style: Widgets.elevatedButtonError(),
-                                    onPressed: () async {
-                                      await showDeleteDialog(
-                                        listScript[index],
-                                      );
-                                      developer.log('Salio del modal');
-                                      await listaScripts();
-                                    },
-                                    label: Text(
-                                      "Eliminar",
-                                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 3.8.w),
-                                    ),
-                                  ),
                                 ],
                               )
                             ],
@@ -409,7 +448,7 @@ class _AppState extends State<AppScript> {
           developer.log('Salio del modal');
           await listaScripts();
         },
-        tooltip: 'Increment',
+        tooltip: 'Add',
         child: const Icon(Icons.add),
       ), // T
     );

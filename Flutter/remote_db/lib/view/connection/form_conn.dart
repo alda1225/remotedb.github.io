@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permisos/models/conection.dart';
 import 'package:permisos/models/scripts.dart';
 import 'package:permisos/utils/utils.dart';
-import 'package:sql_conn/sql_conn.dart';
 import 'dart:developer' as developer;
 
 import '../widget/widget.dart';
@@ -296,6 +293,18 @@ class _AppState extends State<FormConn> {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton.icon(
+                  icon: const Icon(Icons.close_outlined),
+                  style: Widgets.elevatedButtonError(),
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  label: const Text(
+                    "Cancelar",
+                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton.icon(
                   icon: const Icon(Icons.save_outlined),
                   style: Widgets.elevatedButtonSuccess(),
                   onPressed: () async {
@@ -327,18 +336,6 @@ class _AppState extends State<FormConn> {
                   },
                   label: const Text(
                     "Guardar",
-                    style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.close_outlined),
-                  style: Widgets.elevatedButtonError(),
-                  onPressed: () async {
-                    Navigator.pop(context);
-                  },
-                  label: const Text(
-                    "Cancelar",
                     style: TextStyle(fontFamily: 'Montserrat', fontSize: 15),
                   ),
                 ),
