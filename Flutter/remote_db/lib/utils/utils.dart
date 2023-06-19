@@ -12,6 +12,27 @@ import '../models/scripts.dart';
 import '../view/widget/widget.dart';
 
 class Utils {
+  String palabraSemillaAnexo = "softwarefactorycolossal";
+  String desencriptarClave(String clave) {
+    String dexored = "";
+    try {
+      List<int> encriptado = base64.decode(clave);
+      List<int> desencriptado = List<int>.filled(encriptado.length, 0);
+      String llave = palabraSemillaAnexo;
+
+      for (int c = 0; c < encriptado.length; c++) {
+        desencriptado[c] = encriptado[c] ^ llave.codeUnitAt(c % llave.length);
+      }
+      dexored = utf8.decode(desencriptado);
+    } catch (ex) {
+      dexored = "-1";
+      print(ex.toString());
+      print(StackTrace.current);
+    }
+
+    return dexored;
+  }
+
   void createExample() {
     try {
       developer.log("Crea conexion de ejemplo");
@@ -139,7 +160,8 @@ class Utils {
 
   void guardar(List<Connection> connections) {
     try {
-      final List<Map<String, dynamic>> connectionsJson = connections.map((connection) => connection.toJson()).toList();
+      final List<Map<String, dynamic>> connectionsJson =
+          connections.map((connection) => connection.toJson()).toList();
       final jsonString = jsonEncode(connectionsJson);
       writeJson(jsonString);
     } catch (e) {
@@ -152,7 +174,9 @@ class Utils {
       String? jsonConnection = await readJson();
       if (jsonConnection != null && jsonConnection.isNotEmpty) {
         final List<dynamic> parsedJson = json.decode(jsonConnection!);
-        return parsedJson.map((jsonItem) => Connection.fromJson(jsonItem)).toList();
+        return parsedJson
+            .map((jsonItem) => Connection.fromJson(jsonItem))
+            .toList();
       }
       return [];
     } catch (e) {

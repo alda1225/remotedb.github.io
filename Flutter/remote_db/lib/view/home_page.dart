@@ -1,4 +1,6 @@
 //import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
+
 import 'package:client_information/client_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -143,13 +145,13 @@ class _AppState extends State<AppHomePage> {
                             controller: _identificadorController,
                             //initialValue: _identificadorController.text,
                             decoration: Widgets.inputDecorations("Identificador"),
-                            validator: (value) {
+                            /*validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Ingrese el nombre";
                               } else {
                                 return null;
                               }
-                            },
+                            },*/
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -187,11 +189,39 @@ class _AppState extends State<AppHomePage> {
                           style: Widgets.buttonPrimary(),
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) => const AppConection(),
-                                ),
-                              );
+                              String ip = "";
+                              String puerto = "";
+
+                              //String entrada = '192.168.10.190';
+                              String entrada = utils.desencriptarClave(_codigoEncriptadoController.text);
+                              List<String> partes = entrada.split(':');
+
+                              if (partes.length > 1) {
+                                ip = partes[0];
+                                puerto = partes[1];
+                                print('IP: $ip:$puerto');
+                              } else {
+                                ip = entrada;
+                                puerto = "80";
+                                print('IP: $ip');
+                              }
+
+                              Socket.connect(ip, int.parse(puerto), timeout: Duration(seconds: 3)).then((socket) {
+                                print("connect success");
+                                socket.destroy();
+
+                                //Redirecting to App
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => const AppConection(),
+                                  ),
+                                );
+                              }).catchError((error) {
+                                print(error.toString());
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  Widgets.snackBar("error", "No se pudo conectar: $entrada"),
+                                );
+                              });
                             }
                           },
                           label: Text(
