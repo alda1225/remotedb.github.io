@@ -5,6 +5,7 @@ import 'package:client_information/client_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permisos/view/widget/widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:developer' as developer;
 import 'package:sizer/sizer.dart';
@@ -21,6 +22,7 @@ class AppHomePage extends StatefulWidget {
 final formKey = GlobalKey<FormState>();
 final _identificadorController = TextEditingController();
 final _codigoEncriptadoController = TextEditingController();
+final _checkCacheController = TextEditingController();
 //final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 //String _host = "";
 //String _id = "";
@@ -43,7 +45,14 @@ class _AppState extends State<AppHomePage> {
     try {
       //_host = hostDevice(await deviceInfoPlugin.androidInfo);
       //_id = idDevice(await deviceInfoPlugin.androidInfo);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
       ClientInformation? info;
+      final bool? cache = prefs.getBool('cache');
+      if (cache != null && cache == true) {}
+
+      final String? codigo = prefs.getString('codigo');
+      if (cache != null && cache == true) {}
 
       try {
         info = await ClientInformation.fetch();
