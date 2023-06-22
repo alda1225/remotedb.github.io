@@ -49,10 +49,14 @@ class _AppState extends State<AppHomePage> {
 
       ClientInformation? info;
       final bool? cache = prefs.getBool('cache');
-      if (cache != null && cache == true) {}
+      if (cache != null && cache == true) {
+        ScaffoldMessenger.of(context).showSnackBar(Widgets.snackBar("error", 'No se pudo definir su IDENTIFICADOR.'));
+      }
 
       final String? codigo = prefs.getString('codigo');
-      if (cache != null && cache == true) {}
+      if (codigo != null && codigo != "") {
+        ScaffoldMessenger.of(context).showSnackBar(Widgets.snackBar("error", 'No se pudo definir su IDENTIFICADOR.'));
+      }
 
       try {
         info = await ClientInformation.fetch();
