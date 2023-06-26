@@ -225,7 +225,7 @@ class _AppState extends State<AppScript> {
                     left: 10,
                   ),
                   child: Text(
-                    "RemoteDB",
+                    "DBQuery",
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 23,
@@ -288,12 +288,12 @@ class _AppState extends State<AppScript> {
                             children: [
                               Row(
                                 children: [
-                                  Container(
+                                  /*Container(
                                     height: 50,
                                     width: 50,
                                     margin: const EdgeInsets.only(right: 15),
                                     child: Image.asset("images/script.png"),
-                                  ),
+                                  ),*/
                                   Container(
                                     padding: const EdgeInsets.symmetric(vertical: 10),
                                     child: Column(
@@ -309,7 +309,7 @@ class _AppState extends State<AppScript> {
                                             ),
                                             const SizedBox(width: 10),
                                             SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.5,
+                                              width: MediaQuery.of(context).size.width * 0.6,
                                               child: Text(
                                                 "${listScript[index].nombre}",
                                                 style: const TextStyle(
@@ -331,7 +331,7 @@ class _AppState extends State<AppScript> {
                                           ),
                                           const SizedBox(width: 10),
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.5,
+                                            width: MediaQuery.of(context).size.width * 0.6,
                                             child: Text(
                                               listScript[index].descripcion ?? "",
                                               style: const TextStyle(
@@ -352,7 +352,7 @@ class _AppState extends State<AppScript> {
                                           ),
                                           const SizedBox(width: 10),
                                           SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.5,
+                                            width: MediaQuery.of(context).size.width * 0.6,
                                             child: Text(
                                               listScript[index].idPadre ?? "",
                                               style: const TextStyle(

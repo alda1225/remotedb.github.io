@@ -272,12 +272,12 @@ class _AppState extends State<AppConection> {
                               children: [
                                 Row(
                                   children: [
-                                    Container(
+                                    /*Container(
                                       height: 55,
                                       width: 55,
                                       margin: const EdgeInsets.only(right: 15),
                                       child: Image.asset("images/sql-icon.jpg"),
-                                    ),
+                                    ),*/
                                     Container(
                                       padding: const EdgeInsets.symmetric(vertical: 5),
                                       child: Column(
@@ -293,7 +293,7 @@ class _AppState extends State<AppConection> {
                                               ),
                                               const SizedBox(width: 10),
                                               SizedBox(
-                                                width: MediaQuery.of(context).size.width * 0.4,
+                                                width: MediaQuery.of(context).size.width * 0.6,
                                                 child: Text(
                                                   "${listConexiones[index].nombre}",
                                                   style: const TextStyle(
@@ -315,7 +315,7 @@ class _AppState extends State<AppConection> {
                                             ),
                                             const SizedBox(width: 10),
                                             SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.4,
+                                              width: MediaQuery.of(context).size.width * 0.6,
                                               child: Text(
                                                 listConexiones[index].hostIp ?? "",
                                                 style: const TextStyle(
@@ -336,7 +336,7 @@ class _AppState extends State<AppConection> {
                                             ),
                                             const SizedBox(width: 10),
                                             SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.4,
+                                              width: MediaQuery.of(context).size.width * 0.6,
                                               child: Text(
                                                 listConexiones[index].user ?? "",
                                                 style: const TextStyle(
@@ -357,7 +357,7 @@ class _AppState extends State<AppConection> {
                                             ),
                                             const SizedBox(width: 10),
                                             SizedBox(
-                                              width: MediaQuery.of(context).size.width * 0.4,
+                                              width: MediaQuery.of(context).size.width * 0.6,
                                               child: Text(
                                                 listConexiones[index].database ?? "",
                                                 style: const TextStyle(

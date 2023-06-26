@@ -33,6 +33,19 @@ class Utils {
     return dexored;
   }
 
+  String encriptarClave(String texto) {
+    List<int> encriptado = [];
+    String llave = palabraSemillaAnexo;
+
+    List<int> bytes = utf8.encode(texto);
+
+    for (int i = 0; i < bytes.length; i++) {
+      encriptado.add(bytes[i] ^ llave.codeUnitAt(i % llave.length));
+    }
+
+    return base64.encode(encriptado);
+  }
+
   void createExample() {
     try {
       developer.log("Crea conexion de ejemplo");
@@ -160,8 +173,7 @@ class Utils {
 
   void guardar(List<Connection> connections) {
     try {
-      final List<Map<String, dynamic>> connectionsJson =
-          connections.map((connection) => connection.toJson()).toList();
+      final List<Map<String, dynamic>> connectionsJson = connections.map((connection) => connection.toJson()).toList();
       final jsonString = jsonEncode(connectionsJson);
       writeJson(jsonString);
     } catch (e) {
@@ -174,9 +186,7 @@ class Utils {
       String? jsonConnection = await readJson();
       if (jsonConnection != null && jsonConnection.isNotEmpty) {
         final List<dynamic> parsedJson = json.decode(jsonConnection!);
-        return parsedJson
-            .map((jsonItem) => Connection.fromJson(jsonItem))
-            .toList();
+        return parsedJson.map((jsonItem) => Connection.fromJson(jsonItem)).toList();
       }
       return [];
     } catch (e) {

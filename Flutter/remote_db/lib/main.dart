@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'RemoteDB',
+          title: 'DBQuery',
           theme: ThemeData(
             scaffoldBackgroundColor: Colors.white,
             primarySwatch: Colors.deepPurple,

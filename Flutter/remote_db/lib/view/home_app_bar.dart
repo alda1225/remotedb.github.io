@@ -98,7 +98,7 @@ class _AppState extends State<HomeAppBar> {
               left: 10,
             ),
             child: Text(
-              "RemoteDB",
+              "DBQuery",
               style: TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 23,
@@ -161,6 +161,7 @@ class _AppState extends State<HomeAppBar> {
                     builder: (BuildContext context) => const AppConection(),
                   ),
                 );
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   Widgets.snackBar("success", 'Archivo importado exitosamente'),
                 );
