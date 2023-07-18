@@ -28,7 +28,7 @@ class HomeDrawer extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    'V 2.0',
+                    'V 2.1',
                     style: TextStyle(fontFamily: 'Montserrat', fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ],

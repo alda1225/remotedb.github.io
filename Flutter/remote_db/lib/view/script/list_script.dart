@@ -409,7 +409,8 @@ class _AppState extends State<AppScript> {
                                     icon: Icon(Icons.play_arrow_outlined, size: 5.w),
                                     style: Widgets.elevatedButtonSuccess(),
                                     onPressed: () async {
-                                      bool conexionDatabase = await utils.connectDatabase(context, listConexiones[0]);
+                                      bool conexionDatabase = await utils.connectDatabase(context, widget.conn);
+
                                       if (conexionDatabase) {
                                         if (listScript[index].scriptString!.toLowerCase().contains('select')) {
                                           //execute query for select

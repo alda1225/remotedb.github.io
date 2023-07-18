@@ -78,16 +78,16 @@ class Utils {
     }
   }
 
-  Future<bool> connectDatabase(BuildContext context, Connection conn) async {
-    debugPrint("Connecting...");
+  Future<bool> connectDatabase(BuildContext context, Connection? conn) async {
+    debugPrint("Connecting... ");
 
     try {
       showDialog(
         context: context,
         builder: (context) {
-          return const AlertDialog(
-            title: Text("Procesando..."),
-            content: SizedBox(
+          return AlertDialog(
+            title: Text('Connectando "${conn!.hostIp}"'),
+            content: const SizedBox(
               height: 40,
               child: Center(child: CircularProgressIndicator()),
             ),
@@ -96,7 +96,7 @@ class Utils {
       );
 
       await SqlConn.connect(
-        ip: conn.hostIp ?? "",
+        ip: conn!.hostIp ?? "",
         port: conn.port ?? "",
         databaseName: conn.database ?? "",
         username: conn.user ?? "",
@@ -116,7 +116,7 @@ class Utils {
       ScaffoldMessenger.of(context).showSnackBar(
         Widgets.snackBar(
           "error",
-          'Conexion fallida! $e | Server=${conn.hostIp},${conn.port};Database=${conn.database};User Id=${conn.user};Password=${conn.pass};',
+          'Conexion fallida! $e | Server=${conn!.hostIp},${conn.port};Database=${conn.database};User Id=${conn.user};Password=${conn.pass};',
         ),
       );
 

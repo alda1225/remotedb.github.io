@@ -112,10 +112,10 @@ class _AppState extends State<AppConection> {
                       ),
                     ],
                   ),
-                  Column(
+                  const Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       SizedBox(height: 5),
                       Padding(
                         padding: EdgeInsets.all(10),
@@ -254,11 +254,15 @@ class _AppState extends State<AppConection> {
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
                           onTap: () {
-                            Navigator.of(context).push(
+                            Navigator.push(
+                              context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) => AppScript(conn: listConexiones[index]),
                               ),
-                            );
+                            ).then((returnValue) {
+                              init();
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             height: 120,
